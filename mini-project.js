@@ -36,7 +36,8 @@ const simulateRides = (totalMinutes) => {
     console.log(`-------- 🕒 Minute ${minute} -----------`);
 
     for (const taxi of taxis) {
-      if (!taxi.available) { // Taxi already accepte course
+      if (!taxi.available) {
+        // Taxi already accepte course
         taxi.timeRemaining -= 1;
         if (taxi.timeRemaining <= 0) {
           taxi.available = true;
@@ -80,7 +81,7 @@ const simulateRides = (totalMinutes) => {
         closestTaxi.available = false;
         closestTaxi.position = req.position;
         closestTaxi.timeRemaining = req.duration;
-        closestTaxi.totalMinutes += 1;
+        closestTaxi.totalRides += 1;
         console.log(
           `\n→ Taxi ${closestTaxi.id} assigned (distance: ${minDistance}, duration: ${req.duration})`
         );
@@ -93,3 +94,18 @@ const simulateRides = (totalMinutes) => {
 };
 
 simulateRides(20);
+
+console.log("\nAll rides completed.");
+console.log("\n------------------- Final Report -----------------");
+
+const totalRides = [];
+
+for (let i = 0; i < taxis.length; i++) {
+  console.log(
+    `\ntaxi ${taxis[i].id}: ${taxis[i].totalRides} rides, position ${taxis[i].position}`
+  );
+  totalRides.push(taxis[i].totalRides);
+}
+
+const sumTotalRides = totalRides.reduce((acc, curr) => acc + curr, 0);
+console.log(`\nTotal rides: ${sumTotalRides}`);
