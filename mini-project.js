@@ -6,8 +6,8 @@ const taxis = [
 ];
 
 const requests = [
-  { reqId: 1, position: 4, duration: 2, time: 2 },
-  { reqId: 2, position: 3, duration: 6, time: 4 },
+  { reqId: 1, position: 4, duration: 3, time: 2 },
+  { reqId: 2, position: 3, duration: 6, time: 3 },
 ];
 
 const queue = [];
@@ -54,21 +54,29 @@ const simulateRides = (totalMinutes) => {
         console.log(
           `\n🚖 New Request ${request.reqId} at position ${request.position}`
         );
-        const result = getClosestTaxi(request);
-        if (result) {
-          const { closestTaxi, minDistance } = getClosestTaxi(request);
-          closestTaxi.position = request.position;
-          closestTaxi.available = false;
-          closestTaxi.timeRemaining = request.duration;
-          closestTaxi.totalRides += 1;
-          console.log(
-            `\n→ Taxi ${closestTaxi.id} assigned (distance: ${minDistance}, duration: ${request.duration})`
-          );
-        } else {
+
+        if (queue.length > 0) {
           queue.push(request);
           console.log(
             `\n⏳ All taxis busy → Request ${request.reqId} added to queue`
           );
+        } else {
+          const result = getClosestTaxi(request);
+          if (result) {
+            const { closestTaxi, minDistance } = getClosestTaxi(request);
+            closestTaxi.position = request.position;
+            closestTaxi.available = false;
+            closestTaxi.timeRemaining = request.duration;
+            closestTaxi.totalRides += 1;
+            console.log(
+              `\n→ Taxi ${closestTaxi.id} assigned (distance: ${minDistance}, duration: ${request.duration})`
+            );
+          } else {
+            queue.push(request);
+            console.log(
+              `\n⏳ All taxis busy → Request ${request.reqId} added to queue`
+            );
+          }
         }
       }
     }
